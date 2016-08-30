@@ -17,8 +17,8 @@ public class UserDao {
 		return vo;
 	}
 	
-	public void update(UserVo vo){
-		sqlSession.update("user.update", vo);
+	public boolean update(UserVo vo){
+		return sqlSession.update("user.update", vo) != 0;
 	}
 	
 	public UserVo get(Long userNo){
