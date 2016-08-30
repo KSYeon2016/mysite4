@@ -1,31 +1,26 @@
 package kr.ac.sungkyul.mysite.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.ac.sungkyul.mysite.exception.UserInfoUpdateException;
 import kr.ac.sungkyul.mysite.vo.UserVo;
 
 @Repository
 public class UserDao {
-	private Connection getConnection() throws SQLException{
-		Connection conn = null;
-		
-		try{
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
-		} catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}
-		
-		return conn;
-	}
+	@Autowired
+	private SqlSession sqlSession;
+
+	@Autowired
+	private DataSource dataSource;
 	
 	public UserVo get(String email){
 		UserVo vo = null;
@@ -34,7 +29,7 @@ public class UserDao {
 		ResultSet rs = null;
 		
 		try{
-			conn = getConnection();
+			conn = dataSource.getConnection();
 			
 			String sql = "select no, name, email from users where email = ?";
 			pstmt = conn.prepareStatement(sql);
@@ -69,12 +64,12 @@ public class UserDao {
 		return vo;
 	}
 	
-	public void update(UserVo vo){
+	public void update(UserVo vo) throws UserInfoUpdateException{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		try{
-			conn = getConnection();
+			conn = dataSource.getConnection();
 			
 			Long no = vo.getNo();
 			String name = vo.getName();
@@ -104,7 +99,8 @@ public class UserDao {
 			
 			pstmt.executeUpdate();
 		} catch(SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		} finally {
 			try{
 				if(pstmt != null){
@@ -127,7 +123,7 @@ public class UserDao {
 		ResultSet rs = null;
 		
 		try{
-			conn = getConnection();
+			conn = dataSource.getConnection();
 			
 			String sql = "select no, name, gender from users where no=?";
 			pstmt = conn.prepareStatement(sql);
@@ -165,44 +161,11 @@ public class UserDao {
 	}
 	
 	public UserVo get(String email, String password){
-		UserVo vo = null;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		UserVo userVo = new UserVo();
+		userVo.setEmail(email);
+		userVo.setPassword(password);
 		
-		try{
-			conn = getConnection();
-			
-			String sql = "select no, name from users where email=? and password=?";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, email);
-			pstmt.setString(2, password);
-			
-			rs = pstmt.executeQuery();
-			if(rs.next()){
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				
-				vo = new UserVo();
-				vo.setNo(no);
-				vo.setName(name);
-			}
-		} catch(SQLException e){
-			e.printStackTrace();
-		} finally {
-			try{
-				if(pstmt != null){
-					pstmt.close();
-				}
-				
-				if(conn != null){
-					conn.close();
-				}
-			} catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
+		UserVo vo = sqlSession.selectOne("user.getByEmailAndPassword", userVo);
 		
 		return vo;
 	}
@@ -212,7 +175,7 @@ public class UserDao {
 		PreparedStatement pstmt = null;
 		
 		try{
-			conn = getConnection();
+			conn = dataSource.getConnection();
 			
 			String sql = "insert into users "
 					+ "		values(seq_users.nextval, ?, ?, ?, ?)";
