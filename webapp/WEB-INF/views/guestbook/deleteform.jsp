@@ -2,9 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>  
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%
-	String no = request.getParameter( "no" );
-%>
 <!doctype html>
 <html>
 <head>
@@ -17,8 +14,7 @@
 		<c:import url='/WEB-INF/views/include/header.jsp'/>
 		<div id="content">
 			<div id="guestbook" class="delete-form">
-				<form method="post" action="/mysite4/guestbook/delete">
-					<input type='hidden' name="no" value="<%=no%>">
+				<form method="post" action="/mysite4/guestbook/delete/${no}">
 					<label>비밀번호</label>
 					<input type="password" name="password">
 					<input type="submit" value="확인">

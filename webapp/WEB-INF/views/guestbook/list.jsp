@@ -40,7 +40,7 @@
 									<td>[${countList - s.index }]</td>
 									<td>${vo.name }</td>
 									<td>${vo.regDate }</td>
-									<td><a href="/mysite4/guestbook/deleteform?no=${vo.no }">삭제</a></td>
+									<td><a href="/mysite4/guestbook/deleteform/${vo.no }">삭제</a></td>
 								</tr>
 								<tr>
 									<td colspan=4>
