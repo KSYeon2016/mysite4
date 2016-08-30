@@ -10,21 +10,20 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/mysite/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+<link href="/mysite4/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
 		<c:import url='/WEB-INF/views/include/header.jsp'/>
 		<div id="content">
 			<div id="guestbook" class="delete-form">
-				<form method="post" action="/mysite/guestbook">
-					<input type="hidden" name="a" value="delete">
+				<form method="post" action="/mysite4/guestbook/delete">
 					<input type='hidden' name="no" value="<%=no%>">
 					<label>비밀번호</label>
 					<input type="password" name="password">
 					<input type="submit" value="확인">
 				</form>
-				<a href="/mysite/guestbook">방명록 리스트</a>
+				<a href="/mysite4/guestbook/list">방명록 리스트</a>
 			</div>
 		</div>
 		<c:import url='/WEB-INF/views/include/navi.jsp'/>

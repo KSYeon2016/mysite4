@@ -62,4 +62,11 @@ public class UserController {
 		
 		return "redirect:/main";
 	}
+	
+	@RequestMapping("/modifyform")
+	public String modifyForm(HttpSession session){
+//		session = request.get
+//		UserVo userVo = userService.get(userNo);
+		return "user/modifyform";
+	}
 }

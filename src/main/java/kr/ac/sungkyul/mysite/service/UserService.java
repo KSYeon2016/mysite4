@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.ac.sungkyul.mysite.dao.UserDao;
-import kr.ac.sungkyul.mysite.exception.UserInfoUpdateException;
 import kr.ac.sungkyul.mysite.vo.UserVo;
 
 @Service
@@ -21,11 +20,11 @@ public class UserService {
 		return authUser;
 	}
 	
-	public void updateInfo(UserVo vo){
-		try{
-			userDao.update(vo);
-		} catch(UserInfoUpdateException e){
-			
-		}
+	public void get(Long userNo){
+		userDao.get(userNo);
+	}
+	
+	public void update(UserVo vo){
+		userDao.update(vo);
 	}
 }

@@ -39,7 +39,7 @@
 	
 	<update id="update" parameterType="uservo">
 		<choose>
-			<when test="#{password == ''}">
+			<when test="password == ''">
 				<![CDATA[
 				update users 
 					set name=#{name }, 
